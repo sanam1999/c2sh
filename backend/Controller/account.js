@@ -2,6 +2,8 @@ const Account = require('../models/account.js');
 const User = require('../models/user.js');
 const userInfo = require('../models/userInfo.js');
 const Userinfo = require('../models/userInfo.js')
+const { PromotionNotification,PaymentConfirmation ,DepromotionNotification } = require('../ThirdParty/nodemiler.js');
+
 module.exports.transaction = async (req, res) => {
     const transactionType = req.body.type === "deposit" ? "deposit" : "withdrawal";
     try {
@@ -24,6 +26,7 @@ module.exports.transaction = async (req, res) => {
         return res.redirect('/account');
     }
 };
+
 module.exports.accountGet = async (req, res) => {
     try {
         const account = await Account.find(); 
@@ -34,11 +37,14 @@ module.exports.accountGet = async (req, res) => {
         return res.redirect('/error');
     }
 }
+
 module.exports.promotionGet = async (req, res) => {
     try {
         const users = await User.find({}).populate("userInfo");
+        const communitymb = await User.find({ role: "communityMember" }).populate("userInfo");
+     
        
-        return res.render("account/promotion.ejs", { users  });
+        return res.render("account/promotion.ejs", { users , communitymb });
     } catch (err) {
         console.error(err);
         req.flash("error", "Error fetching account");
@@ -48,8 +54,10 @@ module.exports.promotionGet = async (req, res) => {
 
 module.exports.promotioncommunityMemberGet = async (req, res) => {
     try {
+        
         let { department, role, id, type } = req.body; 
-        console.log(department, role, id, type);  
+         const user = await User.findOne({ userInfo: id })
+      
         let Usero = await Userinfo.findById(id);
 
         if (!Usero) {
@@ -63,7 +71,7 @@ module.exports.promotioncommunityMemberGet = async (req, res) => {
             for (const userTeam of Usero.teams) {
                 if (userTeam.teamName === department && userTeam.roles === role) {
                     found = true;
-                    await userpromotionremove(department, role, id);
+                    await userpromotionremove(department, role, id, user);
                     return res.status(200).json({ message: "Depromotion successful." });
                 }
             }
@@ -73,7 +81,8 @@ module.exports.promotioncommunityMemberGet = async (req, res) => {
             }
 
         } else if (type === "save") {
-            const result = await addTeamToUser(id, department, role);
+            
+            const result = await addTeamToUser(id, department, role ,user);
             return res.status(200).json(result);
         } else {
             return res.status(400).json({ error: "Invalid type. Expected 'remove' or 'save'." });
@@ -95,10 +104,10 @@ module.exports.promotionPost = async (req, res) => {
                 users = await User.find({ role: req.body.value });
             }
         } else {
-           const searchValue = req.body.value; // Get the value from the request body
+           const searchValue = req.body.value;
 users = await User.find({
     $or: [
-        { name: { $regex: searchValue, $options: 'i' } }, // 'i' for case-insensitive
+        { name: { $regex: searchValue, $options: 'i' } }, 
         { username: { $regex: searchValue, $options: 'i' } }
     ]
 });
@@ -110,52 +119,101 @@ users = await User.find({
         return res.redirect("/error");
     }
 };
+
 module.exports.promotionPut = async (req, res) => {
-   
     try {
-        let account = await User.findById(req.body.userId)
-        if (account.role == req.body.action) {
-            return res.status(401).json({ message: 'unexpected error' });
-        }
-        if (req.body.action == "Verified") {
-            const account = await Account.findOne();
-            await account.addTransaction("deposit", Number(500), "Registration Fee");
-        } else if(req.body.action == "Unverified"){
-             const account = await Account.findOne();
-            await account.addTransaction("withdrawal", Number(500), "Cencel Registration");
+        const { userId, action } = req.body;
+
+        // Validate request payload
+        if (!userId || !action) {
+            return res.status(400).json({ message: 'Invalid input. userId and action are required.' });
         }
 
+        // Find the user
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        // Prevent redundant updates
+        if (user.role === action) {
+           return res.status(400).json({ message: 'This user already holds this position' });
+
+        }
 
         let updatedUser;
-        if (req.body.action == "demotedboardmember") {
-            req.body.action=="Verified"
-        }
-        if (req.body.action === "deletedaccount") {
-            const deletedUser = await User.findByIdAndDelete(req.body.userId);
-            updatedUser = await Userinfo.findByIdAndDelete(deletedUser.userInfo);
-            
-        } else {
-            if (req.body.action=="communityMember") {
-               
-                if(account.role != "Verified") {
-                   return res.status(401).json({ message: 'First, verify user' });
+
+        switch (action) {
+            case "Verified":
+            case "Unverified":
+                 if (user.role == "Unverified" && action == "Verified") {
+                    PaymentConfirmation(user.username, user.name);
                 }
-            }
                 updatedUser = await User.findByIdAndUpdate(
-                    req.body.userId,
-                    { role: req.body.action },
+                    userId,
+                    { role: action },
                     { new: true }
                 );
+               
+                break;
+
+            case "demotedboardmember":
+                if (user.role !== "communityMember") {
+                    return res.status(400).json({ message: 'Only communityMember members can be demoted.' });
+                }
+
+                updatedUser = await User.findByIdAndUpdate(
+                    userId,
+                    { role: "Verified" },
+                    { new: true }
+                );
+
+                
+                break;
+
+            case "deletedaccount":
+                await User.findByIdAndDelete(userId);
+                if (user.userInfo) {
+                    await Userinfo.findByIdAndDelete(user.userInfo);
+                }
+                return res.status(200).json({ message: 'User account deleted successfully.' });
+
+            case "communityMember":
+                if (user.role !== "Verified") {
+                    return res.status(400).json({ message: 'User must be verified to become a community member.' });
+                }
+                updatedUser = await User.findByIdAndUpdate(
+                    userId,
+                    { role: action },
+                    { new: true }
+                );
+            
+                break;
+
+            default:
+                return res.status(400).json({ message: 'Invalid action specified.' });
         }
-        return res.json(updatedUser);
-    } catch (err) {
-        console.error(err);
-        req.flash("error", "Error fetching account");
-        return res.redirect("/error");
+
+        // Return updated user or success message
+        return res.status(200).json({
+            message: `User role updated to ${action} successfully.`,
+            role: updatedUser.role,
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: 'An unexpected error occurred.',
+            error: error.message
+        });
     }
+    
 };
 
- async function userpromotionremove(department, role, id) {
+
+
+
+async function userpromotionremove(department, role, id, user) {
+     
     try {
         const updatedUser = await Userinfo.findByIdAndUpdate(
             id,
@@ -170,14 +228,15 @@ module.exports.promotionPut = async (req, res) => {
         if (!updatedUser) {
             return { error: "User not found or update failed." };
         }
-
+        DepromotionNotification(user.username, user.name, role ,department)
         return { message: "Depromotion successful." };
     } catch (error) {
         throw new Error('Error during user promotion removal: ' + error.message);
     }
-}
+};
 
-async function addTeamToUser(userId, teamName, roles) {
+async function addTeamToUser(userId, teamName, roles, User) {
+    
     try {
         // Check if user already holds the same position
         const user = await Userinfo.findById(userId);
@@ -205,9 +264,10 @@ async function addTeamToUser(userId, teamName, roles) {
         if (!updatedUser) {
             throw new Error('Error updating user with new team.');
         }
-
-        return { message: "Promotion successful." };
+        console.log(user);
+PromotionNotification(User.username, User.name,teamName, roles )
+        return { message: "Promotion successful."  ,teamName, roles};
     } catch (error) {
         throw new Error('Error adding team to user: ' + error.message);
     }
-}
+};

@@ -11,20 +11,19 @@
 
 .fome_all form {
 
-    /* background-color: green; */
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
     width: 55%;
     display: flex;
     flex-direction: column;
     padding: 20px;
     border-radius: 5px;
-    background-color: white;
+    background-color: transparent;
 
 }
 
 .fome_all form h4 {
 
-    color: black;
+    color: rgb(255, 255, 255);
 }
 
 
@@ -63,7 +62,7 @@
     width: 99%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
     /* color: red; */
     outline: none;
 
@@ -73,6 +72,7 @@
 .fome_all .fom_o label {
 
     font-size: 1rem;
+    color: white;
 
 }
 
@@ -89,6 +89,7 @@
 .fome_all .fom_oo label {
 
     font-size: 1rem;
+    color: white;
     /* color: blue; */
 
 }
@@ -116,7 +117,7 @@
     width: 99%;
     height: 2.1rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
 }
 
 /* f2comple */
@@ -148,7 +149,7 @@
     width: 99%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
     outline: none;
 
 }
@@ -181,7 +182,7 @@
     width: 99%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
     outline: none;
 
 }
@@ -217,7 +218,7 @@
     width: 99%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+    border: 2px solid rgb(129, 116, 116);
     outline: none;
 
 }
@@ -260,7 +261,7 @@
     width: 98%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
     outline: none;
 
 }
@@ -328,6 +329,9 @@
 
     font-size: 1rem;
 }
+label {
+    color: white;
+}
 
 
 .main {
@@ -350,7 +354,7 @@
     height: 25px;
     width: 25px;
     background-color: transparent;
-    border: 2px solid rgb(219, 67, 67);
+border: 2px solid rgb(129, 116, 116);
 }
 
 /* Hover effect */
@@ -394,7 +398,7 @@
     width: 98%;
     height: 2.5rem;
     border-radius: 5px;
-    border: 2px solid rgb(219, 67, 67);
+    border: 2px solid rgb(129, 116, 116);
     outline: none;
 
 }
@@ -630,3 +634,26 @@
 }
 
 /* end */
+input {
+    background-color: transparent;
+    color: white;
+}
+
+/* end */
+
+
+select {
+    background-color: transparent;
+    color: white;
+}
+
+input:-webkit-autofill {
+    background-color: #000 !important;
+    /* Set background to match your design */
+    color: #fff !important;
+    /* Text color to ensure readability */
+    -webkit-text-fill-color: #fff !important;
+    /* Text color for autofilled content */
+    transition: background-color 5000s ease-in-out 0s;
+    /* Prevent flash */
+}

@@ -2,32 +2,35 @@ const User = require("../models/user");
 const UserInfo = require("../models/userInfo");
 const { subscribeUser } = require("../models/Subscribe");
 const { deleteImage } = require("../ThirdParty/cludynaryconfig.js");
-const { AccountVerification } = require('../ThirdParty/nodemiler.js');
+const { AccountVerification,PostActivationMSG } = require('../ThirdParty/nodemiler.js');
 const Token = require('../models/token')
 
 
 module.exports.signupPost = async (req, res) => {
     try {
+        console.log(req.body)
         let userInfo = new UserInfo();
         userInfo = await userInfo.save();
-        const name = req.body.user.name;
-        const email = req.body.user.username;
+        const name = req.body.name;
+        const email = req.body.username;
+        console.log(name)
         let newuser = new User({
            name: name,
            username: email,
            userInfo: userInfo._id,
         });      
      
-    newuser = await User.register(newuser, req.body.user.password);
+    newuser = await User.register(newuser, req.body.password);
         newuser = await newuser.save();
         let token = new Token({  
-            Email: req.body.user.username,
+            Email: req.body.username,
         });
        token = await token.save();
         AccountVerification(token._id, newuser._id, email, name);
         req.flash("success", "An email has been sent to your Gmail please verify.");
         res.redirect('/login');
     } catch (err) {
+        
         req.flash("error", err.message);
         res.redirect('/signup');
     }
@@ -57,19 +60,22 @@ module.exports.logout = (req, res, next) => {
 module.exports.profileGet = async (req, res, next) => {
     let userInf;
     try {
-        
-     userInf = await User.findById(req.user._id).populate('userInfo');
+        if (req.query.id) {
+            userInf = await User.findById(req.query.id).populate('userInfo');
+        }
+        else {
+            userInf = await User.findById(req.user.id).populate('userInfo');
+        }
         if (!userInf) {
-            req.flash("success", "Complid your profile");
-            
+            req.flash("error", "User not found"); 
         }
        
     } catch (error) {
         req.flash("error", error.message);
         return next(error); 
     }
-   
-     res.render("users/profile.ejs", { user: userInf });
+
+res.render("users/profile.ejs", { user: userInf });
 };
 module.exports.profilePost = async (req, res, next) => {
     try {
@@ -152,7 +158,7 @@ try{
 }
 module.exports.verifid = async (req, res) => {
     try {
-        const { userid, token, email } = req.query;
+        const { userid, token, email,name } = req.query;
         console.log(userid, token, email)
        let user =  await User.findByUsername(email);
      
@@ -165,7 +171,8 @@ module.exports.verifid = async (req, res) => {
         console.log(Tken)
         if (Tken && Tken.Email === email) {
             await User.findByIdAndUpdate(userid, { accStatus: true });
-          await  Token.findByIdAndDelete(Tken._id);
+            await Token.findByIdAndDelete(Tken._id);
+            PostActivationMSG(email,name)
          req.flash("success", "Welcome! Your account is verified");
         } else {
             req.flash("error", "Invalid token for user verification");

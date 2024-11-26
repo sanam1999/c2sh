@@ -1,4 +1,215 @@
 <% layout("/layouts/boilerplates.ejs") %>
+<style>
+    section {
+
+
+
+
+        display: flex;
+        justify-content: center;
+        position: relative;
+        height: fit-content;
+        padding: 0px;
+        margin: 0px;
+        width: 100vw;
+        height: 85vh;
+        overflow: hidden;
+        background-image: linear-gradient(100deg, var(--e-global-color-btn-red) -80%, var(--e-global-color-dark-icons-background) 38%);
+
+
+
+    }
+
+    .tintt {
+
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        position: absolute;
+        background-image: url("/images/footer-right.png");
+        background-repeat: no-repeat;
+        text-align: left;
+        background-position-x: right;
+
+
+
+
+        /* background-color:#2e1c1c ; */
+
+
+    }
+
+
+
+    input:-webkit-autofill {
+        background-color: #000 !important;
+        /* Set background to match your design */
+        color: #fff !important;
+        /* Text color to ensure readability */
+        -webkit-text-fill-color: #fff !important;
+        /* Text color for autofilled content */
+        transition: background-color 5000s ease-in-out 0s;
+        /* Prevent flash */
+    }
+
+
+    input:-webkit-autofill {
+        background-color: #000 !important;
+        /* Match your theme */
+        color: #fff !important;
+        /* Ensure readability */
+        -webkit-text-fill-color: #fff !important;
+        /* Autofill text color */
+        border: 1px solid #444;
+        /* Optional: border styling for autofilled fields */
+        transition: background-color 5000s ease-in-out 0s;
+        /* Prevent flashing */
+    }
+
+
+    .form_all {
+
+        width: 65%;
+        height: auto;
+        display: flex;
+        margin: auto;
+        transform: translate(-1%, 15%);
+
+    }
+
+
+
+
+    .form_all .form_right {
+
+        width: 40%;
+        border-radius: 50px 5px 50px 5px;
+        background: transparent;
+        background: rgba(0, 0, 0, 0.452);
+        padding: 10px;
+
+
+    }
+
+    .form_all .form_right form {
+
+        text-align: center;
+    }
+
+
+
+    .form_all .form_right h3 {
+
+        font-size: 2.1rem;
+        color: white;
+        font-weight: 100;
+        font-family: sans-serif;
+        margin-top: 10px;
+
+    }
+
+
+    .form_all .form_right .input {}
+
+    .form_all .form_right .input input {
+
+        width: 80%;
+        height: 45px;
+        background: transparent;
+        outline: none;
+        border: none;
+        border-bottom: 2px solid white;
+        font-size: 1.1rem;
+        color: white;
+        margin-bottom: 15px;
+
+
+    }
+
+    .form_all .form_right button {
+
+        width: 80%;
+        height: 40px;
+        background: #f43334;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        border: none;
+        margin-top: 30px;
+
+
+    }
+
+
+    .form_all .form_right button:hover {
+
+        background: white;
+        color: #f43334;
+        border: transparent;
+    }
+
+    .form_all .form_right .ancr {
+
+        color: white;
+        margin-top: -50px;
+        padding: 20px;
+
+
+    }
+
+    .form_all .form_right a {
+
+        color: white;
+    }
+
+
+    /*  */
+    .form_all .form_left {
+
+        /*	border: 2px solid white;*/
+        width: 60%;
+        color: white;
+        padding: 10px;
+        text-align: right;
+    }
+
+
+
+    .form_all .form_left h1 {
+
+        font-size: 4.5rem;
+        font-family: sans-serif;
+        font-weight: 100;
+        color: white;
+        margin-top: 50px;
+    }
+
+    .form_all .form_left p {
+
+        font-size: 1.1rem;
+    }
+
+    .form_all .form_left .btn {
+
+        /* background-color: black; */
+        width: 100%;
+        display: flex;
+        justify-content: right;
+
+    }
+
+    .form_all .form_left button {
+
+        width: 170px;
+        height: 40px;
+        background: #f43334;
+        font-size: 1rem;
+        font-weight: 600;
+        color: white;
+        border: none;
+
+    }
+</style>
 <!-- HEADER-SECTION -->
 <div class="home-header-section">
     <header class="header home-header-section">
@@ -89,36 +300,61 @@
         </div>
     </header>
 
+</div>
+<section class="tint">
+
+    <div class="tintt">
+
+        <div class="form_all">
+
+
+            <div class="form_right">
+                <form action="/signup" method="post">
+                    <h3>Sign In</h3>
+
+                    <div class="input">
+                        <!-- Name -->
+                        <input type="text" required name="name" class="frm-control" id="inputName"
+                            placeholder="Enter your name" ame="user[name]" autocomplete="name" />
+
+                        <!-- Email -->
+                        <input type="email" required name="username" class="frm-control" id="inputEmail"
+                            placeholder="Enter your email" name="user[username]" autocomplete="username" />
+
+                        <!-- Password -->
+                        <input type="password" required name="password" class="frm-control" id="inputPassword"
+                            placeholder="Enter your password" name="user[password]" autocomplete="current-password" />
+
+                        <!-- Confirm Password -->
+                        <input type="password" required name="confirm_password" class="frm-control" id="inputConfirmPassword"
+                            placeholder="Confirm your password" name="user[c_password]" autocomplete="new-password" />
+                    </div>
+<button type="submit" class="btn btn-success mb-5">SIGN IN</button>
+
+<div class="ancr">
+    <a href="">Forget password</a>
+</div>
+</form>
 
 </div>
-<div class="row mt-3">
-    <div class="col-6 offset-3">
-        <h1>SignUp</h1>
-        <form action="/signup" method="post" class="needs-validation" novalidate>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Full Name</label>
-                <input type="text" required name="user[name]" class="form-control" id="exampleInputEmail1">
-            </div>
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Email</label>
-                <input type="email" required name="user[username]" class="form-control" id="exampleInputEmail1"
-                    placeholder="@horizoncampusedu.lk">
-                <div class="invalid-feedback">Give a valid Email</div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" required name="user[password]" class="form-control" id="exampleInputEmail1"
-                        placeholder="*********">
-                </div>
-                <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label">Confirm Password</label>
-                <input type="password" required name="user[c_password]" class="form-control" id="exampleInputEmail1"
-                    placeholder="********">
-                </div>
-                <button type="submit" class="btn btn-success mb-5">Submit</button>
-                </form>
-                </div>
-                </div>
+<div class="form_left">
+
+    <h1>Welcome Home</h1>
+
+    <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+        industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+        and scrambled it to make a type specimen book.</p>
+
+    <div class="btn">
+
+        <a href="/login"> <button>SIGN UP</button> </a>
+
+
+    </div>
+</div>
+</div>
+
+    </div>
 
 <script>
                         const form = document.querySelector('form');
@@ -129,14 +365,35 @@
 
                         let status = true;
 
-                        var password = document.querySelector('input[name="user[password]"]').value;
-                        var confirmPassword = document.querySelector('input[name="user[c_password]"]').value;
-                        console.log(password, confirmPassword);
+                            // Get input values
+                            const passwordField = document.querySelector('input[name="password"]');
+                            const confirmPasswordField = document.querySelector('input[name="confirm_password"]');
 
-                        // Check if passwords match and if password length is at least 8 characters
-                        if (password !== confirmPassword || password.length < 8) {
+                            // Ensure elements exist
+                            if (!passwordField || !confirmPasswordField) {
+
+                                errbox.style.display = "block"
+                                errmsg.innerText = "Password or confirm password fields are missing."
+                                return;
+                            }
+
+                            const password = passwordField.value;
+                            const confirmPassword = confirmPasswordField.value;
+
+                            // Validate password length
+                            if (password.length < 8) {
+                                status = false;
+
+                                errbox.style.display = "block"
+                                errmsg.innerText = "Password is too short < 8"
+                            }
+
+                            // Validate password match
+                            if (password !== confirmPassword) {
                             status = false;
-                            alert('Passwords do not match or password is too short');
+
+                                errbox.style.display = "block"
+                                errmsg.innerText = "Passwords do not match"
                 }
 
                         // Check form validity
@@ -144,15 +401,13 @@
                     status = false;
                 }
 
-                        if (!status) {
-                            return;
-                        }
-
-                      
+                            // Submit form if validation passed
+                            if (status) {
                         form.submit();
+                            }
         });
-</script>
 
+</script>
 <script>
 
     const currentPath = window.location.pathname;

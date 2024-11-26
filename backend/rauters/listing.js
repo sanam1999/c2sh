@@ -10,22 +10,22 @@ const upload = multer({ storage });
 
 router.route('/')
     .get( wrapAsync(listingcontroller.index))
- .post(isAuthenticated, upload.single('image'), wrapAsync(listingcontroller.createPost));
+//  .post(isAuthenticated, upload.single('image'), wrapAsync(listingcontroller.createPost));
 
     
-// Create route
-router.get('/create', isAuthenticated, listingcontroller.create);
+// // Create route
+// router.get('/create', isAuthenticated, listingcontroller.create);
 
 
 
-// Show route
-router.route('/:id')
-    .get(wrapAsync(listingcontroller.showPost))
-     .put(isAuthenticated, isowner,upload.single('listing[image]'), wrapAsync(listingcontroller.postUpdate))
-    .delete(isAuthenticated, isowner, wrapAsync(listingcontroller.postDelete))
+// // Show route
+// router.route('/:id')
+//     .get(wrapAsync(listingcontroller.showPost))
+//      .put(isAuthenticated, isowner,upload.single('listing[image]'), wrapAsync(listingcontroller.postUpdate))
+//     .delete(isAuthenticated, isowner, wrapAsync(listingcontroller.postDelete))
     
 
-// Edit route
-router.get('/:id/edit',isAuthenticated,isowner, wrapAsync(listingcontroller.editPost));
+// // Edit route
+// router.get('/:id/edit',isAuthenticated,isowner, wrapAsync(listingcontroller.editPost));
 
-module.exports = router;
+ module.exports = router;

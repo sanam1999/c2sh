@@ -1,6 +1,17 @@
 <% layout("/layouts/boilerplates.ejs") %>
 <link rel="stylesheet" type="text/css" href="/css/newlog.css">
-
+<style>
+    input:-webkit-autofill {
+        background-color: #000 !important;
+        /* Set background to match your design */
+        color: #fff !important;
+        /* Text color to ensure readability */
+        -webkit-text-fill-color: #fff !important;
+        /* Text color for autofilled content */
+        transition: background-color 5000s ease-in-out 0s;
+        /* Prevent flash */
+    }
+</style>
     <!-- HEADER-SECTION -->
     <div class="home-header-section">
         <header class="header home-header-section">
@@ -83,27 +94,7 @@
 
 
     </div>
-<!-- nav end -->
-<!-- <div class="row mt-3">
-        <div class="col-6 offset-3">
-            <h1>Login</h1>
-            <form action="/login" method="post" class="needs-validation " novalidate>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Email</label>
-                    <input type="email" required name="username" class="form-control" id="exampleInputEmail1">
-                    <div class="invalid-feedback"> Give a valid Email</div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" required name="password" class="form-control" id="exampleInputEmail1">
-                </div>
-                <button type="submit" class="btn btn-success mb-5">Login</button>
-            </form>
-        </div>
-        </div> -->
-        
-        
-        <!-- home loging -->
+
         
         <body>
         
@@ -123,7 +114,7 @@
         
                             <div class="btn">
         
-                                <button>SIGN UP</button>
+                            <a href="/signup"><button>SIGN UP</button></a>
         
         
                             </div>
@@ -148,7 +139,7 @@
                                     <button type="submit" class="btn btn-success mb-5">SIGN IN</button>
                                 </div>
         
-                                <a href="">Forget password</a>
+                                <!-- <a href="">Forget password</a> -->
         
                             </form>
         
@@ -186,9 +177,7 @@
             '/signup': 'Signup',
 
                         };
-                        // document.querySelectorAll('.nav-item').forEach(item => {
-                        //     item.classList.remove('active');
-                        // });
+
                         if (pathname[currentPath]) {
                             document.querySelector('.title').innerText = pathname[currentPath];
 

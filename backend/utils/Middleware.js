@@ -22,12 +22,12 @@ module.exports.saveURL = (req, res, next) => {
     next();
 };
 module.exports.isowner = async (req, res, next) => {
-     const { id } = req.params;
-    let listing = await Listing.findById(id);
-    if (!listing.owner._id.equals(res.locals.curUser._id)) {
-        req.flash("error", "You are not the owner of this listing");
-        return res.redirect(`/listings/${id}`)
+    const { _id }  = req.user;
+    if (!_id.equals(res.locals.curUser._id)) {
+        req.flash("error", "You are not the owner");
+        return res.redirect(`/profile`)
     }
+    console.log(_id,res.locals.curUser._id)
     next();
 }
 module.exports.listingvalidate = (req, res, next) => {

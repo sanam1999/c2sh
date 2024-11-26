@@ -33,12 +33,12 @@ module.exports.feedback = async (req, res) => {
         }
         
         if (type === 'like') {
-            event.likes = (event.likes || 0) + 1;  // Increment like count
+            event.likes = (event.likes || 0) + 1;
         } else if (type === 'dislike') {
-            event.dislikes = (event.dislikes || 0) + 1;  // Increment dislike count
+            event.dislikes = (event.dislikes || 0) + 1;
         }
 
-        await event.save();  // Save the updated listing to the database
+        await event.save();  
 
         res.json({ likes: event.likes, dislikes: event.dislikes });
     } catch (error) {

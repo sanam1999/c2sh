@@ -19,6 +19,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const LocalStrategy = require("passport-local");
 const User = require('./models/user.js');
+const { isAuthenticated } = require('./utils/Middleware.js');
 
 
 
@@ -84,10 +85,10 @@ app.use(("/und"),(req, res) => {
 
 // Routes
 app.use('/', userRouter);
-app.use('/listings', listingRouter);
-app.use('/event', eventRouter);
-app.use('/account', account);
-app.use('/reviews', reviewRouter);
+app.use('/listings', isAuthenticated  , listingRouter);
+app.use('/event', isAuthenticated  , eventRouter);
+app.use('/account', isAuthenticated  , account);
+
 
 
 // Error handling middleware

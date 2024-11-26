@@ -366,7 +366,7 @@
             </tr>
         </thead>
         <tbody id="withdrawalTable2">
-            <% users.forEach(user=> { %>
+            <% communitymb.forEach(user=> { %>
                 <tr data-id="<%= user._id %>">
                     <td>
                         <p class="id">
@@ -547,8 +547,9 @@
 
                         if (response.ok && !result.error) {
                             alert("ok")
+                            console.log(result)
                             if (event.target.classList.value == "save") {
-                                let html = `<span>${result.department} -> ${result.role}</span><br>`;
+                                let html = `<span>${result.teamName} -> ${result.roles}</span><br>`;
                                 console.log(result, html)
                                 elementrole.insertAdjacentHTML('beforeend', html);
                             } else {
@@ -562,15 +563,21 @@
                             }
 
                         } else {
-                            alert(result.error)
+
+                            errbox.style.display = "block"
+                            errmsg.innerText = result.error
                         }
                     } catch (error) {
-                        alert('Error fetching data:', error)
+
+                        errbox.style.display = "block"
+                        errmsg.innerText = 'Error fetching data:', error
 
                     }
                 } else {
-                    alert('All fields(department, role, id) must be selected.')
+                    errbox.style.display = "block"
+                    errmsg.innerText = "All fields(department, role, id) must be selected."
                     
+
                 }
 
             });
@@ -586,8 +593,7 @@
 
 
     <script>
-        const errorMsg = document.querySelector('.e_flassmsg');
-        const seggMsg = document.querySelector('.s_flassmsg');
+
         document.getElementById("userStatus").addEventListener("change", async (event) => {
             const role = event.target.value;
             await getdata("role", role);
@@ -610,11 +616,13 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error("Network response was not ok: " + response.statusText);
+                    errbox.style.display = "block"
+                    errmsg.innerText = "Network response was not ok: " + response.statusText
+
                 }
 
                 const result = await response.json();
-                
+
                 let withdrawalTable = document.querySelector('#withdrawalTable');
                 withdrawalTable.innerHTML = "";
 
@@ -652,7 +660,6 @@
             }
         }
 
-
         function attachUserStatusListeners() {
             const userStatusElements = document.querySelectorAll(".userStatus");
 
@@ -660,6 +667,11 @@
                 select.addEventListener("change", async (e) => {
                     const selectedValue = e.target.value;
                     const userId = e.target.closest('tr').getAttribute('data-id');
+
+                    if (!selectedValue) {
+                        alert("Please select a valid status.");
+                        return;
+                    }
 
                     if (selectedValue === "deletedaccount") {
                         const userConfirmed = confirm("Are you sure you want to delete your account? This action cannot be undone.");
@@ -678,29 +690,36 @@
                         });
 
                         const result = await response.json();
-
+                        console.log(result);
                         if (response.ok) {
-                            showMessage(seggMsg, result.message);
+
                             if (selectedValue !== "deletedaccount") {
-                                e.target.closest('tr').querySelector(".role").innerText = result.role;
+                                e.target.closest('tr').querySelector(".role").innerText = result.role || "Unknown";
+
                             }
+                            alert(result.message)
+
                         } else {
-                            const errorMessage = response.status === 401 ? result.message : response.statusText;
-                            showMessage(errorMsg, errorMessage);
+                            const errorMessage = result?.message || "An error occurred.";
+                            errbox.style.display = "block";
+                            errmsg.innerText = errorMessage;
                         }
 
+
                     } catch (error) {
-                        showMessage(errorMsg, "An error occurred while updating user status.");
+                        errbox.style.display = "block";
+                        errmsg.innerText = "An error occurred while updating user status.";
                     }
                 });
             });
         }
 
+
         attachUserStatusListeners();
 
         async function petPromotion(type) {
             const url = type ? `/account/communityMember/${type}` : "/account/communityMember";
-
+            // const                                                                                                                                                                                                                       "/account/communityMember/${$type}`:
             try {
                 const response = await fetch(url, {
                     method: "GET",
@@ -711,17 +730,13 @@
                 return await response.json();;
 
             } catch (error) {
-                console.error("Fetch error:", error);
+
+                errbox.style.display = "block"
+                errmsg.innerText = "Fetch error:", error
             }
         }
 
 
 
-        function showMessage(element, message) {
-            element.innerText = message;
-            element.style.display = 'block';
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000);
-        }
+
     </script>

@@ -581,8 +581,7 @@
     </section>
 
     <!-- ABOUT-TEAM-SECTION -->
-    <section class="about-us-section-start about-teams-section overflow-hidden"
-        style="pointer-events: none; opacity: 0.8;">
+    <section class="about-us-section-start about-teams-section overflow-hidden">
         <div class="about-right-icon position-relative" data-aos="fade-up-right">
             <figure class="whyus-icon"><img src=".//images/about-us-section-right-icon.png" alt="" class="img-fluid">
             </figure>
@@ -595,6 +594,7 @@
                 </div>
             </div>
             <div class="row">
+                <a href="/profile?id=6741e588d26c67f04764d420">
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <div class="about-teams-inner" data-aos="fade-up">
                         <div class="about-team">
@@ -620,6 +620,8 @@
                         </div>
                     </div>
                 </div>
+                </a>
+                <a href="/profile?id=6741e588d26c67f04764d420">
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <div class="about-teams-inner" data-aos="fade-up">
                         <div class="about-team ">
@@ -646,6 +648,8 @@
 
                     </div>
                 </div>
+                </a>
+                <a href="/profile?id=6741e588d26c67f04764d420">
                 <div class="col-lg-4 col-md-4 col-sm-12">
                     <div class="about-teams-inner" data-aos="fade-up">
                         <div class="about-team">
@@ -670,8 +674,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+                    </a>
+                    </div>
+                    
+                    </div>
+                    
     </section>
     <!-- Blogs-Section -->
     <section disabled class="about-us-section-start blogs-section-starts overflow-hidden"
@@ -796,7 +803,8 @@
             event.preventDefault();
             const email = this.elements['email'].value;
             if (!email) {
-                alert('Please enter a valid email address.');
+                errbox.style.display = "block"
+                errmsg.innerText = "Please enter a valid email address."
                 return;
             }
             try {
@@ -811,10 +819,14 @@
                 if (response.ok) {
                     alert('Subscribed successfully!');
                 } else {
-                    alert('Error subscribing. Please try again.');
+                    errbox.style.display = "block"
+                    errmsg.innerText = "Error subscribing. Please try again."
+                    
                 }
             } catch (error) {
-                alert('An error occurred. Please try again.');
+                errbox.style.display = "block"
+                errmsg.innerText = "An error occurred. Please try again."
+                
             }
         });
 

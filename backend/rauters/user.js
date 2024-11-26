@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const warpAsync = require('../utils/warpAsync');
 const passport = require('passport'); 
-const {saveURL, isAuthenticated, isActivate} = require('../utils/Middleware.js')
+const {saveURL, isAuthenticated, isActivate,isowner} = require('../utils/Middleware.js')
 
 const { signupGet, signupPost, loginPost, loginGet, logout, profileGet,profilePost, editProfile, profileIMGupdate, loginacc, Subscribe, verifid } = require('../Controller/usre')
 const { upload } = require("../ThirdParty/cludynaryconfig.js");
@@ -11,12 +11,12 @@ const { upload } = require("../ThirdParty/cludynaryconfig.js");
 router.route('/signup')
     .get(signupGet)
     .post(warpAsync(signupPost));
-router.route('/profile')
+router.route('/profile/')
     .get(isAuthenticated, profileGet)
     .post(isAuthenticated, profilePost);
 
 router.route('/profile/edit')
-    .get(isAuthenticated, editProfile)
+    .get(isowner,isAuthenticated, editProfile)
     .post(isAuthenticated, profilePost)
     .put(upload.single('profileImg'), profileIMGupdate)
     
@@ -42,7 +42,7 @@ router.route('/getUserinfo')
     .get(loginacc);
 
 router.route('/Subscribe')
-    .post(Subscribe);
+    .post(isActivate, Subscribe);
 
 router.route('/verifid')
     .get(verifid)
